@@ -1,49 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import PaginationButtonList from './PaginationButtonList';
+import React, { useEffect, useState } from "react";
+import { fetchPosts } from "../api/fetchPosts";
+import { PaginationButtonsList } from "./PaginationButtonsList";
+import { Post } from "./Post";
 
 const PostList = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [data, setData] = useState(null);
+  const [page, setPage] = useState(1);
+
+  const loadData = async () => {
+    fetchPosts(page, 5)
+      .then((res) => res.json())
+      .then((jsonData) => {
+        setData(jsonData);
+      });
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await fetch(
-        `https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=5`
-      );
-      const data = await res.json();
-      setPosts(data);
-      setLoading(false);
-    };
+    loadData();
+  }, []);
 
-    fetchData();
-  }, [currentPage]);
+  useEffect(() => {
+    setData(null);
+    loadData();
+  }, [page]);
 
-  if (loading) {
-    return (
-      <div id="loader">
-        <h2>Loading...</h2>
-      </div>
-    );
-  }
+  const clickHandler = (val) => {
+    setPage(val);
+  };
 
   return (
-    <div>
-      <div className="posts">
-        {posts.map(post => (
-          <div className="post" key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.body}</p>
-          </div>
-        ))}
-      </div>
-      <PaginationButtonList
-        currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-      />
-    </div>
+    <>
+      {data == null ? (
+        <div id="loader" className="loader">
+          loading
+        </div>
+      ) : (
+        data.map((ele) => {
+          return <Post ele={ele} key={ele.id} />;
+        })
+      )}
+      <PaginationButtonsList page={page} clickHandler={clickHandler} />
+    </>
   );
 };
 
-export default PostList;
+export { PostList };
