@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import PostList from './PostList';
+import React from 'react'
+import '../styles/App.css';
+import { PostList } from './PostList';
+const App = () => {
 
-function App() {
   return (
-    <div className="container">
+    <div id="main">
       <PostList />
     </div>
-  );
+  )
 }
+
 
 export default App;
