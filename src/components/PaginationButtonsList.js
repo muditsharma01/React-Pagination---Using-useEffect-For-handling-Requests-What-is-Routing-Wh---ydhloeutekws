@@ -1,20 +1,27 @@
-import React from 'react';
+import React from "react";
+const PaginationButtonsList = ({ page, clickHandler }) => {
+  let pages = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ];
 
-const PaginationButtonList = ({ currentPage, setCurrentPage }) => {
   return (
-    <div className="pagination-button-list">
-      {Array.from({ length: 20 }, (_, i) => (
-        <button
-          key={i + 1}
-          id={`button-${i + 1}`}
-          className={`page-btn ${currentPage === i + 1 ? 'active-btn' : ''}`}
-          onClick={() => setCurrentPage(i + 1)}
-        >
-          {i + 1}
-        </button>
-      ))}
+    <div className="pagination-buttons-list">
+      {pages.map((ele, id) => {
+        return (
+          <button
+            className={ele == page ? "active-btn" : ""}
+            id={`button-${ele}`}
+            key={id}
+            onClick={() => {
+              clickHandler(ele);
+            }}
+          >
+            {ele}
+          </button>
+        );
+      })}
     </div>
   );
 };
 
-export default PaginationButtonList;
+export { PaginationButtonsList };
